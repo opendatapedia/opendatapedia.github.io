@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Le Département {{ libelle }}</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- chart.js stuff -->
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
+
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">OpenDataPedia</a>
+    <!--<form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+    </form>-->
+</nav>
+<div class="row">
+<div class="col-2">
+<ul class="list-group">
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france.html">France</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/regions.html">Régions</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/departements.html">Départements</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/communes.html">Communes</a></li>
+    <li class="list-group-item divider"></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
+</ul>
+</div>
+<div class="col-9"><h1>Le Département Nièvre</h1>
+<p>Le département Nièvre fait partie des 101 départements français.</p><hr />
+<p><small>
+Jeux de données utilisés dans cette page: </p>
+<p><a href="/opendatapedia/dataset/cog_2020_departements">cog_2020_departements</a></p>
+<p></small></p>
