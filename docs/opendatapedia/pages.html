@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<title>OpenDataPedia Pages</title>
+<title>Les Pages OpenDataPedia</title>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
 <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -44,8 +44,8 @@
     <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
 </ul>
 </div>
-<div class="col-9"><h1>OpenDataPedia Pages</h1>
-<p><strong>OpenDataPedia</strong> est constitué de <strong>123 pages</strong> générées à partir de <strong>X jeux de données</strong>.</p>
+<div class="col-9"><h1>Les Pages</h1>
+<p><strong>OpenDataPedia</strong> est constitué de <strong>123 pages</strong>.</p>
 <table id="odp_pages" class="display" style="width:100%">
 <thead>
 <tr>
@@ -66,6 +66,16 @@
 </table>
 <script>
 $(document).ready(function() {
+
+    $.fn.dataTable.render.odp_url = function() {
+        return function( data, type, row ) {
+            if ( type == 'display' ) {
+                return '<a href="' + data + '">' + data + '</a>'
+            }
+            return data;
+        }
+    };
+
     var table = $('#odp_pages').DataTable( {
         dom: 'lBfrtip',
         buttons: [
@@ -79,17 +89,21 @@ $(document).ready(function() {
 
             { "data": "title"
 
+
             },
 
             { "data": "path"
 
+                , "render": $.fn.dataTable.render.odp_url() 
             },
 
             { "data": "datasets"
 
+
             },
 
             { "data": "size"
+                , className: 'dt-body-right' 
 
             },
         ]
@@ -98,6 +112,4 @@ $(document).ready(function() {
 
 </script><hr />
 <p><small>
-Jeux de données utilisés dans cette page: </p>
-<p><a href="/opendatapedia/dataset/odp_pages">odp_pages</a></p>
-<p></small></p>
+Jeux de données utilisés dans cette page:<a href="/opendatapedia/dataset/odp_pages">odp_pages</a>&nbsp;</small></p>

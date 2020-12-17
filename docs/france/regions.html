@@ -66,6 +66,16 @@
 </table>
 <script>
 $(document).ready(function() {
+
+    $.fn.dataTable.render.odp_url = function() {
+        return function( data, type, row ) {
+            if ( type == 'display' ) {
+                return '<a href="' + data + '">' + data + '</a>'
+            }
+            return data;
+        }
+    };
+
     var table = $('#cog_2020_regions').DataTable( {
         dom: 'lBfrtip',
         buttons: [
@@ -79,18 +89,22 @@ $(document).ready(function() {
 
             { "data": "reg"
 
+
             },
 
             { "data": "cheflieu"
+
 
             },
 
             { "data": "tncc"
 
+
             },
 
             { "data": "libelle"
-                , "render": "/france/regions/{{ libelle }} "
+
+
             },
         ]
         } );
@@ -98,6 +112,4 @@ $(document).ready(function() {
 
 </script><hr />
 <p><small>
-Jeux de données utilisés dans cette page: </p>
-<p><a href="/opendatapedia/dataset/cog_2020_regions">cog_2020_regions</a></p>
-<p></small></p>
+Jeux de données utilisés dans cette page:<a href="/opendatapedia/dataset/cog_2020_regions">cog_2020_regions</a>&nbsp;</small></p>

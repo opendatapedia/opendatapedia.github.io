@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Les Jeux de Données OpenDataPedia</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- chart.js stuff -->
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
+
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">OpenDataPedia</a>
+    <!--<form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+    </form>-->
+</nav>
+<div class="row">
+<div class="col-2">
+<ul class="list-group">
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france.html">France</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/regions.html">Régions</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/departements.html">Départements</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/communes.html">Communes</a></li>
+    <li class="list-group-item divider"></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
+</ul>
+</div>
+<div class="col-9"><h1>Les Jeux de Données</h1>
+<p><strong>OpenDataPedia</strong> est construit à partir de <strong>5 jeux de données</strong>.</p>
+<table id="odp_datasets" class="display" style="width:100%">
+<thead>
+<tr>
+<th>Identifiant du Jeux de Données</th>
+<th>Nom du Jeux de Données</th>
+<th>Fichier du Jeux de Données</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<th>Identifiant du Jeux de Données</th>
+<th>Nom du Jeux de Données</th>
+<th>Fichier du Jeux de Données</th>
+</tr>
+</tfoot>
+</table>
+<script>
+$(document).ready(function() {
+
+    $.fn.dataTable.render.odp_url = function() {
+        return function( data, type, row ) {
+            if ( type == 'display' ) {
+                return '<a href="' + data + '">' + data + '</a>'
+            }
+            return data;
+        }
+    };
+
+    var table = $('#odp_datasets').DataTable( {
+        dom: 'lBfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "ajax": {
+            "url": "/data/odp_datasets.json",
+            "dataSrc": "data"
+        },
+        "columns": [
+
+            { "data": "id"
+
+
+            },
+
+            { "data": "name"
+
+
+            },
+
+            { "data": "data_file"
+
+
+            },
+        ]
+        } );
+    } );
+
+</script><hr />
+<p><small>
+Jeux de données utilisés dans cette page:<a href="/opendatapedia/dataset/odp_datasets">odp_datasets</a>&nbsp;</small></p>
