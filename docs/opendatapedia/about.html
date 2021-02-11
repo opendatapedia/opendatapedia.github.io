@@ -23,6 +23,16 @@
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
 
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+crossorigin=""/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+crossorigin=""></script>
+<script src="/js/leaflet.ajax.min.js"></script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -46,7 +56,7 @@
 </div>
 <div class="col-9"><h1>OpenDataPedia</h1>
 <p><em>OpenDataPedia v<odp.version></em></p>
-<p><strong>OpenDataPedia</strong> est constitué de <strong>123 pages</strong> générées à partir de <strong>X</strong> jeux de données.</p>
+<p><strong>OpenDataPedia</strong> est constitué de <strong>1 pages</strong> générées à partir de <strong>X</strong> jeux de données.</p>
 <p>Plus de détails sur les pages <a href="/opendatapedia/pages">ici</a>.</p>
 <p>Plus de détails sur les jeux de donnés <a href="/opendatapedia/datasets">ici</a>.</p><hr />
 <p><small>
