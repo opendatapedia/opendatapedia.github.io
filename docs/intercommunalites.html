@@ -1,0 +1,5208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Intercommunalités</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- chart.js stuff -->
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
+
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+crossorigin=""/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+crossorigin=""></script>
+<script src="/js/leaflet.ajax.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">OpenDataPedia</a>
+    <!--<form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+    </form>-->
+</nav>
+<div class="row">
+<div class="col-2">
+<ul class="list-group">
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france.html">France</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/regions.html">Régions</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/departements.html">Départements</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/communes.html">Communes</a></li>
+    <li class="list-group-item divider"></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
+</ul>
+</div>
+<div class="col-9"><h1>Intercommunalités</h1>
+<h2>Répartition par nature juridique en France</h2>
+<canvas id="chart_bar_horizontal" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("chart_bar_horizontal").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [222]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [996]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [5006]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [1253]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [1998]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [819]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [124]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [21]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'POLEM', 'data': [25]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'CU', 'data': [14]}, {'borderColor': 'olive', 'backgroundColor': 'olive', 'label': 'MET69', 'data': [1]}, {'borderColor': 'maroon', 'backgroundColor': 'maroon', 'label': 'EPT', 'data': [11]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: "France - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h2>Répartition par nature juridique en Région</h2>
+<h3>Région 84 - Auvergne-Rhône-Alpes</h3>
+<canvas id="84 - Auvergne-Rhône-Alpes" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("84 - Auvergne-Rhône-Alpes").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [28]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [132]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [476]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [169]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [233]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [138]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [4]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [3]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'MET69', 'data': [1]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'POLEM', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 01 - Ain</h4>
+<canvas id="01 - Ain" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("01 - Ain").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [41]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [24]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 03 - Allier</h4>
+<canvas id="03 - Allier" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("03 - Allier").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [15]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [37]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [13]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 07 - Ardèche</h4>
+<canvas id="07 - Ardèche" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("07 - Ardèche").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [14]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [38]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [10]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [25]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 15 - Cantal</h4>
+<canvas id="15 - Cantal" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("15 - Cantal").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [29]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [1]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [6]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [6]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 26 - Drôme</h4>
+<canvas id="26 - Drôme" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("26 - Drôme").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [52]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [10]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [22]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [10]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 38 - Isère</h4>
+<canvas id="38 - Isère" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("38 - Isère").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [70]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [26]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [28]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [8]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 42 - Loire</h4>
+<canvas id="42 - Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("42 - Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [7]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [25]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [14]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [17]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 43 - Haute-Loire</h4>
+<canvas id="43 - Haute-Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("43 - Haute-Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [10]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [24]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [18]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 63 - Puy-de-Dôme</h4>
+<canvas id="63 - Puy-de-Dôme" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("63 - Puy-de-Dôme").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [11]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [40]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [32]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [29]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [45]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 69 - Rhône</h4>
+<canvas id="69 - Rhône" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("69 - Rhône").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'MET69', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [54]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [5]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [16]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [19]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 73 - Savoie</h4>
+<canvas id="73 - Savoie" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("73 - Savoie").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [14]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [47]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [10]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [15]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 74 - Haute-Savoie</h4>
+<canvas id="74 - Haute-Savoie" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("74 - Haute-Savoie").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [18]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [41]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [20]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [11]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 32 - Hauts-de-France</h3>
+<canvas id="32 - Hauts-de-France" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("32 - Hauts-de-France").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [23]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [64]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [627]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [78]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [158]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [42]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [8]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'CU', 'data': [2]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'POLEM', 'data': [6]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 02 - Aisne</h4>
+<canvas id="02 - Aisne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("02 - Aisne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [14]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [159]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [10]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [25]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 59 - Nord</h4>
+<canvas id="59 - Nord" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("59 - Nord").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CU', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CA', 'data': [6]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'CC', 'data': [9]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVU', 'data': [47]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SIVOM', 'data': [14]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMF', 'data': [31]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'SMO', 'data': [13]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'POLEM', 'data': [2]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 60 - Oise</h4>
+<canvas id="60 - Oise" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("60 - Oise").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [18]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [186]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [26]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [41]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [6]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 62 - Pas-de-Calais</h4>
+<canvas id="62 - Pas-de-Calais" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("62 - Pas-de-Calais").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [11]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [106]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [22]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [31]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [7]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [2]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 80 - Somme</h4>
+<canvas id="80 - Somme" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("80 - Somme").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [12]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [129]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [30]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 93 - Provence-Alpes-Côte d'Azur</h3>
+<canvas id="93 - Provence-Alpes-Côte d'Azur" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("93 - Provence-Alpes-Côte d'Azur").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [16]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [33]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [126]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [36]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [71]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [52]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [3]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'POLEM', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 04 - Alpes-de-Haute-Provence</h4>
+<canvas id="04 - Alpes-de-Haute-Provence" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("04 - Alpes-de-Haute-Provence").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [6]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [21]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [8]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 05 - Hautes-Alpes</h4>
+<canvas id="05 - Hautes-Alpes" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("05 - Hautes-Alpes").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [36]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [3]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [6]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 06 - Alpes-Maritimes</h4>
+<canvas id="06 - Alpes-Maritimes" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("06 - Alpes-Maritimes").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [2]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [17]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [15]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [9]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [17]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 13 - Bouches-du-Rhône</h4>
+<canvas id="13 - Bouches-du-Rhône" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("13 - Bouches-du-Rhône").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [22]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [3]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [6]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [11]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 83 - Var</h4>
+<canvas id="83 - Var" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("83 - Var").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [7]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [29]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [20]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 84 - Vaucluse</h4>
+<canvas id="84 - Vaucluse" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("84 - Vaucluse").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [10]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [22]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [6]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 44 - Grand Est</h3>
+<canvas id="44 - Grand Est" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("44 - Grand Est").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [20]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [125]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [717]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [177]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [237]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [77]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [4]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [26]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'CU', 'data': [1]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'METRO', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 08 - Ardennes</h4>
+<canvas id="08 - Ardennes" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("08 - Ardennes").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [89]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [12]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [9]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 10 - Aube</h4>
+<canvas id="10 - Aube" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("10 - Aube").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [12]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [25]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [26]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [8]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [4]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 51 - Marne</h4>
+<canvas id="51 - Marne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("51 - Marne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [11]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [41]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [28]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [5]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 52 - Haute-Marne</h4>
+<canvas id="52 - Haute-Marne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("52 - Haute-Marne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [6]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [46]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [33]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [1]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 54 - Meurthe-et-Moselle</h4>
+<canvas id="54 - Meurthe-et-Moselle" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("54 - Meurthe-et-Moselle").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [16]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [91]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [38]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [36]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [7]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 55 - Meuse</h4>
+<canvas id="55 - Meuse" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("55 - Meuse").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [13]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [52]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [17]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [3]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 57 - Moselle</h4>
+<canvas id="57 - Moselle" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("57 - Moselle").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [5]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [16]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [124]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [34]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [49]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [7]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 67 - Bas-Rhin</h4>
+<canvas id="67 - Bas-Rhin" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("67 - Bas-Rhin").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [22]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [66]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [24]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [23]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [13]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [7]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 68 - Haut-Rhin</h4>
+<canvas id="68 - Haut-Rhin" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("68 - Haut-Rhin").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [13]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [98]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [18]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [22]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [31]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 88 - Vosges</h4>
+<canvas id="88 - Vosges" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("88 - Vosges").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [85]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [8]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [12]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [1]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 76 - Occitanie</h3>
+<canvas id="76 - Occitanie" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("76 - Occitanie").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [20]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [138]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [417]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [135]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [257]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [134]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [30]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'METRO', 'data': [2]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'CU', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 09 - Ariège</h4>
+<canvas id="09 - Ariège" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("09 - Ariège").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [24]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [9]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 11 - Aude</h4>
+<canvas id="11 - Aude" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("11 - Aude").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [6]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [67]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [5]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [12]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [9]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 12 - Aveyron</h4>
+<canvas id="12 - Aveyron" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("12 - Aveyron").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [18]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [20]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [14]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [13]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 30 - Gard</h4>
+<canvas id="30 - Gard" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("30 - Gard").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [52]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [30]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [32]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [9]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 31 - Haute-Garonne</h4>
+<canvas id="31 - Haute-Garonne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("31 - Haute-Garonne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [19]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [33]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [12]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 32 - Gers</h4>
+<canvas id="32 - Gers" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("32 - Gers").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [14]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [31]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [3]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [30]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [4]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 34 - Hérault</h4>
+<canvas id="34 - Hérault" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("34 - Hérault").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [11]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [28]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [19]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [18]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [32]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 46 - Lot</h4>
+<canvas id="46 - Lot" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("46 - Lot").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [45]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [19]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [9]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 48 - Lozère</h4>
+<canvas id="48 - Lozère" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("48 - Lozère").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CC', 'data': [10]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SIVU', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVOM', 'data': [3]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMF', 'data': [12]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMO', 'data': [8]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 65 - Hautes-Pyrénées</h4>
+<canvas id="65 - Hautes-Pyrénées" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("65 - Hautes-Pyrénées").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [39]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [23]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [19]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [4]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 66 - Pyrénées-Orientales</h4>
+<canvas id="66 - Pyrénées-Orientales" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("66 - Pyrénées-Orientales").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [36]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [19]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [9]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 81 - Tarn</h4>
+<canvas id="81 - Tarn" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("81 - Tarn").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [34]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [12]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [24]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [16]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 82 - Tarn-et-Garonne</h4>
+<canvas id="82 - Tarn-et-Garonne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("82 - Tarn-et-Garonne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [16]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [2]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 28 - Normandie</h3>
+<canvas id="28 - Normandie" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("28 - Normandie").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [54]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [268]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [209]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [132]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [36]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [3]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [8]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'METRO', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 14 - Calvados</h4>
+<canvas id="14 - Calvados" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("14 - Calvados").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [77]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [16]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [34]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [7]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 27 - Eure</h4>
+<canvas id="27 - Eure" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("27 - Eure").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [69]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [52]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [20]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 50 - Manche</h4>
+<canvas id="50 - Manche" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("50 - Manche").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [5]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [44]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [2]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [14]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [9]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 61 - Orne</h4>
+<canvas id="61 - Orne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("61 - Orne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [13]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [53]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [1]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [27]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [8]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 76 - Seine-Maritime</h4>
+<canvas id="76 - Seine-Maritime" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("76 - Seine-Maritime").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CU', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CA', 'data': [3]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'CC', 'data': [13]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVU', 'data': [25]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SIVOM', 'data': [138]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMF', 'data': [37]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'SMO', 'data': [10]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'POLEM', 'data': [2]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'PETR', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 75 - Nouvelle Aquitaine</h3>
+<canvas id="75 - Nouvelle Aquitaine" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("75 - Nouvelle Aquitaine").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [24]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [128]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [681]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [87]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [228]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [112]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [13]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'CU', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 16 - Charente</h4>
+<canvas id="16 - Charente" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("16 - Charente").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [48]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [19]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 17 - Charente-Maritime</h4>
+<canvas id="17 - Charente-Maritime" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("17 - Charente-Maritime").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [4]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [93]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [15]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [14]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [15]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 19 - Corrèze</h4>
+<canvas id="19 - Corrèze" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("19 - Corrèze").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [14]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 23 - Creuse</h4>
+<canvas id="23 - Creuse" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("23 - Creuse").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [35]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [5]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [19]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 24 - Dordogne</h4>
+<canvas id="24 - Dordogne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("24 - Dordogne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [18]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [66]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [22]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [6]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 33 - Gironde</h4>
+<canvas id="33 - Gironde" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("33 - Gironde").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [24]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [128]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [45]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [10]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 40 - Landes</h4>
+<canvas id="40 - Landes" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("40 - Landes").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [16]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [54]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [1]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [24]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [24]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 47 - Lot-et-Garonne</h4>
+<canvas id="47 - Lot-et-Garonne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("47 - Lot-et-Garonne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [37]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [10]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [11]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 64 - Pyrénées-Atlantiques</h4>
+<canvas id="64 - Pyrénées-Atlantiques" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("64 - Pyrénées-Atlantiques").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [7]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [127]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [9]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [25]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [10]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 79 - Deux-Sèvres</h4>
+<canvas id="79 - Deux-Sèvres" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("79 - Deux-Sèvres").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [6]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [41]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [10]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [11]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 86 - Vienne</h4>
+<canvas id="86 - Vienne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("86 - Vienne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [5]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [25]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [2]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [9]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 87 - Haute-Vienne</h4>
+<canvas id="87 - Haute-Vienne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("87 - Haute-Vienne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [12]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [13]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [15]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 24 - Centre-Val de Loire</h3>
+<canvas id="24 - Centre-Val de Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("24 - Centre-Val de Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [7]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [70]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [370]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [117]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [164]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [36]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [6]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 18 - Cher</h4>
+<canvas id="18 - Cher" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("18 - Cher").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [15]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [65]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [14]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [21]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [7]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 28 - Eure-et-Loir</h4>
+<canvas id="28 - Eure-et-Loir" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("28 - Eure-et-Loir").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [36]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [48]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [36]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [2]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 36 - Indre</h4>
+<canvas id="36 - Indre" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("36 - Indre").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [14]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [62]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [8]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [24]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [10]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 37 - Indre-et-Loire</h4>
+<canvas id="37 - Indre-et-Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("37 - Indre-et-Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [10]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [45]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [9]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [29]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [6]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 41 - Loir-et-Cher</h4>
+<canvas id="41 - Loir-et-Cher" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("41 - Loir-et-Cher").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [9]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [77]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [28]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 45 - Loiret</h4>
+<canvas id="45 - Loiret" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("45 - Loiret").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [85]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [32]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [26]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [6]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 27 - Bourgogne-Franche-Comté</h3>
+<canvas id="27 - Bourgogne-Franche-Comté" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("27 - Bourgogne-Franche-Comté").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [99]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [633]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [117]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [162]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [43]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [15]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'CU', 'data': [2]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'POLEM', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 21 - Côte-d'Or</h4>
+<canvas id="21 - Côte-d'Or" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("21 - Côte-d'Or").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [17]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [91]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [15]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [27]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [3]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 25 - Doubs</h4>
+<canvas id="25 - Doubs" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("25 - Doubs").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [13]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [101]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [26]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [21]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [13]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [2]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 39 - Jura</h4>
+<canvas id="39 - Jura" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("39 - Jura").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [12]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [96]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [33]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 58 - Nièvre</h4>
+<canvas id="58 - Nièvre" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("58 - Nièvre").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [10]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [67]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [5]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 70 - Haute-Saône</h4>
+<canvas id="70 - Haute-Saône" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("70 - Haute-Saône").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [17]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [116]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [34]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [20]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [4]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 71 - Saône-et-Loire</h4>
+<canvas id="71 - Saône-et-Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("71 - Saône-et-Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [16]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [70]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [16]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [43]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [4]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 89 - Yonne</h4>
+<canvas id="89 - Yonne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("89 - Yonne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [12]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [77]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [5]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [9]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [2]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 90 - Territoire de Belfort</h4>
+<canvas id="90 - Territoire de Belfort" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("90 - Territoire de Belfort").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [15]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [4]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 53 - Bretagne</h3>
+<canvas id="53 - Bretagne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("53 - Bretagne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [15]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [42]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [157]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [25]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [90]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [38]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [7]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'METRO', 'data': [2]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'POLEM', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 22 - Côtes-d'Armor</h4>
+<canvas id="22 - Côtes-d'Armor" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("22 - Côtes-d'Armor").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [37]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [5]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [18]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [13]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 29 - Finistère</h4>
+<canvas id="29 - Finistère" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("29 - Finistère").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [16]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [36]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [19]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [14]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 35 - Ille-et-Vilaine</h4>
+<canvas id="35 - Ille-et-Vilaine" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("35 - Ille-et-Vilaine").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [13]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [58]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [39]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [6]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 56 - Morbihan</h4>
+<canvas id="56 - Morbihan" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("56 - Morbihan").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [10]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [26]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [2]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [14]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 94 - Corse</h3>
+<canvas id="94 - Corse" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("94 - Corse").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [17]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [21]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [22]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMO', 'data': [9]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'PETR', 'data': [2]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMF', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 2A - Corse-du-Sud</h4>
+<canvas id="2A - Corse-du-Sud" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("2A - Corse-du-Sud").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [6]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [10]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [14]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMO', 'data': [6]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 2B - Haute-Corse</h4>
+<canvas id="2B - Haute-Corse" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("2B - Haute-Corse").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [11]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [11]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [8]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [4]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [3]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 52 - Pays de la Loire</h3>
+<canvas id="52 - Pays de la Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("52 - Pays de la Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [10]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [56]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [139]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [34]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [101]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [32]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [2]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [3]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'CU', 'data': [2]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 44 - Loire-Atlantique</h4>
+<canvas id="44 - Loire-Atlantique" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("44 - Loire-Atlantique").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [11]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [8]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [15]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [10]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 49 - Maine-et-Loire</h4>
+<canvas id="49 - Maine-et-Loire" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("49 - Maine-et-Loire").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [5]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [20]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [9]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [17]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [8]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 53 - Mayenne</h4>
+<canvas id="53 - Mayenne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("53 - Mayenne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [8]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [15]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [4]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [17]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 72 - Sarthe</h4>
+<canvas id="72 - Sarthe" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("72 - Sarthe").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [15]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [79]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [9]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [26]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [8]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'POLEM', 'data': [1]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'PETR', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 85 - Vendée</h4>
+<canvas id="85 - Vendée" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("85 - Vendée").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [2]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [17]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [17]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [6]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [26]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 11 - Île-de-France</h3>
+<canvas id="11 - Île-de-France" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("11 - Île-de-France").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SIVOM', 'data': [46]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [155]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [55]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'CA', 'data': [20]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'CC', 'data': [30]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SIVU', 'data': [365]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'CU', 'data': [1]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'EPT', 'data': [11]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 75 - Paris</h4>
+<canvas id="75 - Paris" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("75 - Paris").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'METRO', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SIVOM', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [3]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 77 - Seine-et-Marne</h4>
+<canvas id="77 - Seine-et-Marne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("77 - Seine-et-Marne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [7]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [14]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [157]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [15]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [63]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [12]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 78 - Yvelines</h4>
+<canvas id="78 - Yvelines" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("78 - Yvelines").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CU', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CA', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'CC', 'data': [5]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVU', 'data': [63]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SIVOM', 'data': [11]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMF', 'data': [37]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'SMO', 'data': [8]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 91 - Essonne</h4>
+<canvas id="91 - Essonne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("91 - Essonne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [5]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [31]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [9]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [21]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 92 - Hauts-de-Seine</h4>
+<canvas id="92 - Hauts-de-Seine" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("92 - Hauts-de-Seine").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'SIVU', 'data': [9]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SMF', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMO', 'data': [4]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'EPT', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 93 - Seine-Saint-Denis</h4>
+<canvas id="93 - Seine-Saint-Denis" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("93 - Seine-Saint-Denis").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'SIVU', 'data': [12]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SIVOM', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [2]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [3]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'EPT', 'data': [4]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 94 - Val-de-Marne</h4>
+<canvas id="94 - Val-de-Marne" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("94 - Val-de-Marne").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'SIVU', 'data': [22]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SMF', 'data': [2]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMO', 'data': [14]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'EPT', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 95 - Val-d'Oise</h4>
+<canvas id="95 - Val-d'Oise" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("95 - Val-d'Oise").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [4]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [6]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [71]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [7]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [26]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 01 - Guadeloupe</h3>
+<canvas id="01 - Guadeloupe" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("01 - Guadeloupe").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [5]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [1]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [1]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 971 - Guadeloupe</h4>
+<canvas id="971 - Guadeloupe" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("971 - Guadeloupe").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [5]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SIVOM', 'data': [1]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMF', 'data': [1]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'SMO', 'data': [5]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 02 - Martinique</h3>
+<canvas id="02 - Martinique" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("02 - Martinique").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SMF', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMO', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 972 - Martinique</h4>
+<canvas id="972 - Martinique" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("972 - Martinique").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [3]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SMF', 'data': [1]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMO', 'data': [3]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 03 - Guyane</h3>
+<canvas id="03 - Guyane" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("03 - Guyane").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMF', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 973 - Guyane</h4>
+<canvas id="973 - Guyane" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("973 - Guyane").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMF', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 04 - La Réunion</h3>
+<canvas id="04 - La Réunion" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("04 - La Réunion").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SIVU', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [6]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 974 - La Réunion</h4>
+<canvas id="974 - La Réunion" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("974 - La Réunion").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [5]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'SIVU', 'data': [3]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [1]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [6]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 06 - Mayotte</h3>
+<canvas id="06 - Mayotte" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("06 - Mayotte").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [2]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h4>Département 976 - Mayotte</h4>
+<canvas id="976 - Mayotte" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("976 - Mayotte").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [1]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [4]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SMF', 'data': [2]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMO', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: " - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h2>Tableau Détaillé</h2>
+<table id="banatic_competences_groupements_2020" class="display" style="width:100%">
+<thead>
+<tr>
+<th>Numero SIREN</th>
+<th>Nom du groupement</th>
+<th>Nature juridique</th>
+<th>Commune Siège</th>
+<th>Département Siège</th>
+<th>Région Siège</th>
+<th>Compétence GEMAPI - Aménagement d'un bassin ou d'une fraction de bassin hydrographique (1)</th>
+<th>Compétence GEMAPI - Entretien et aménagement d'un cours d'eau, canal, lac ou plan d'eau (2)</th>
+<th>Compétence GEMAPI - Défense contre les inondations et contre la mer (5)</th>
+<th>Compétence GEMAPI - Protection et restauration des sites, des écosystèmes aquatiques, des zones humides et des formations boisées riveraines (8)</th>
+</tr>
+</thead>
+<tfoot>
+<tr>
+<th>Numero SIREN</th>
+<th>Nom du groupement</th>
+<th>Nature juridique</th>
+<th>Commune Siège</th>
+<th>Département Siège</th>
+<th>Région Siège</th>
+<th>Compétence GEMAPI - Aménagement d'un bassin ou d'une fraction de bassin hydrographique (1)</th>
+<th>Compétence GEMAPI - Entretien et aménagement d'un cours d'eau, canal, lac ou plan d'eau (2)</th>
+<th>Compétence GEMAPI - Défense contre les inondations et contre la mer (5)</th>
+<th>Compétence GEMAPI - Protection et restauration des sites, des écosystèmes aquatiques, des zones humides et des formations boisées riveraines (8)</th>
+</tr>
+</tfoot>
+</table>
+<script>
+$(document).ready(function() {
+
+    $.fn.dataTable.render.odp_url = function() {
+        return function( data, type, row ) {
+            if ( type == 'display' ) {
+                return '<a href="' + data + '">' + data + '</a>'
+            }
+            return data;
+        }
+    };
+
+    var table = $('#banatic_competences_groupements_2020').DataTable( {
+        dom: 'lBfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "ajax": {
+            "url": "/data/banatic_competences_groupements_2020.json",
+            "dataSrc": "data"
+        },
+        "columns": [
+
+            { "data": "numero_siren"
+
+
+            },
+
+            { "data": "nom_groupement"
+
+
+            },
+
+            { "data": "nature_juridique"
+
+
+            },
+
+            { "data": "commune_siege"
+
+
+            },
+
+            { "data": "departement_siege"
+
+
+            },
+
+            { "data": "region_siege"
+
+
+            },
+
+            { "data": "C1528"
+
+
+            },
+
+            { "data": "C1529"
+
+
+            },
+
+            { "data": "C1531"
+
+
+            },
+
+            { "data": "C1532"
+
+
+            },
+        ]
+        } );
+    } );
+
+</script><hr />
+<p><small>
+Jeux de données utilisés dans cette page:<a href="/opendatapedia/dataset/banatic_competences_groupements_2020">banatic_competences_groupements_2020</a>&nbsp;</small></p>

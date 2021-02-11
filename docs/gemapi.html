@@ -1,0 +1,2881 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>GEMAPI</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- chart.js stuff -->
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+
+
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+crossorigin=""/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+crossorigin=""></script>
+<script src="/js/leaflet.ajax.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">OpenDataPedia</a>
+    <!--<form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+    </form>-->
+</nav>
+<div class="row">
+<div class="col-2">
+<ul class="list-group">
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france.html">France</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/regions.html">Régions</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/departements.html">Départements</a></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/communes.html">Communes</a></li>
+    <li class="list-group-item divider"></li>
+    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
+</ul>
+</div>
+<div class="col-9"><h1>GEMAPI</h1>
+<p>La GEMAPI (<strong>GE</strong>stion des <strong>M</strong>ilieux <strong>A</strong>quatiques et la <strong>P</strong>révention des <strong>I</strong>nondations) regroupe <strong>4 compétences</strong> :</p>
+<ul>
+<li>
+<p><strong>C1528 :</strong> <em>Compétence GEMAPI - Aménagement d'un bassin ou d'une fraction de bassin hydrographique (1)</em></p>
+</li>
+<li>
+<p><strong>C1529 :</strong> <em>Compétence GEMAPI - Entretien et aménagement d'un cours d'eau, canal, lac ou plan d'eau (2)</em></p>
+</li>
+<li>
+<p><strong>C1531 :</strong> <em>Compétence GEMAPI - Défense contre les inondations et contre la mer (5)</em></p>
+</li>
+<li>
+<p><strong>C1532 :</strong> <em>Compétence GEMAPI - Protection et restauration des sites, des écosystèmes aquatiques, des zones humides et des formations boisées riveraines (8)</em></p>
+</li>
+</ul>
+<hr />
+<h2>Répartition des intercommunalités par nature juridique en France</h2>
+<p><em>avec au moins une des quatre competences GEMAPI</em></p>
+<canvas id="chart_bar_horizontal" width="400" height="400"></canvas>
+<script>
+
+var ctx = document.getElementById("chart_bar_horizontal").getContext('2d');
+ctx.canvas.width = 600;
+ctx.canvas.height = 100;
+
+var cfg = {
+    type: 'horizontalBar',
+    data: {
+        datasets: [{'borderColor': 'red', 'backgroundColor': 'red', 'label': 'CA', 'data': [220]}, {'borderColor': 'green', 'backgroundColor': 'green', 'label': 'CC', 'data': [996]}, {'borderColor': 'blue', 'backgroundColor': 'blue', 'label': 'SIVU', 'data': [4]}, {'borderColor': 'violetyellow', 'backgroundColor': 'violetyellow', 'label': 'SMF', 'data': [376]}, {'borderColor': 'purple', 'backgroundColor': 'purple', 'label': 'SMO', 'data': [69]}, {'borderColor': 'orange', 'backgroundColor': 'orange', 'label': 'METRO', 'data': [21]}, {'borderColor': 'pink', 'backgroundColor': 'pink', 'label': 'CU', 'data': [13]}, {'borderColor': 'grayfuchsia', 'backgroundColor': 'grayfuchsia', 'label': 'SIVOM', 'data': [5]}, {'borderColor': 'cyan', 'backgroundColor': 'cyan', 'label': 'PETR', 'data': [3]}, {'borderColor': 'brown', 'backgroundColor': 'brown', 'label': 'MET69', 'data': [1]}]
+    },
+    options: {
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: "France - Répartition par nature juridique"
+        },
+        scales: {
+            xAxes: [{
+                stacked: true,
+            }],
+            yAxes: [{
+                stacked: true
+            }]
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<h3>Région 84 - Auvergne-Rhône-Alpes</h3>
+<canvas id="84 - Auvergne-Rhône-Alpes" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("84 - Auvergne-Rhône-Alpes").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="84 - Auvergne-Rhône-AlpesSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("84 - Auvergne-Rhône-AlpesSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="84 - Auvergne-Rhône-AlpesEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("84 - Auvergne-Rhône-AlpesEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="84 - Auvergne-Rhône-AlpesEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("84 - Auvergne-Rhône-AlpesEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="84 - Auvergne-Rhône-AlpesEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("84 - Auvergne-Rhône-AlpesEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 32 - Hauts-de-France</h3>
+<canvas id="32 - Hauts-de-France" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("32 - Hauts-de-France").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="32 - Hauts-de-FranceSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("32 - Hauts-de-FranceSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="32 - Hauts-de-FranceEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("32 - Hauts-de-FranceEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="32 - Hauts-de-FranceEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("32 - Hauts-de-FranceEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="32 - Hauts-de-FranceEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("32 - Hauts-de-FranceEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 93 - Provence-Alpes-Côte d'Azur</h3>
+<canvas id="93 - Provence-Alpes-Côte d'Azur" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("93 - Provence-Alpes-Côte d'Azur").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="93 - Provence-Alpes-Côte d'AzurSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("93 - Provence-Alpes-Côte d'AzurSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="93 - Provence-Alpes-Côte d'AzurEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("93 - Provence-Alpes-Côte d'AzurEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="93 - Provence-Alpes-Côte d'AzurEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("93 - Provence-Alpes-Côte d'AzurEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="93 - Provence-Alpes-Côte d'AzurEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("93 - Provence-Alpes-Côte d'AzurEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 44 - Grand Est</h3>
+<canvas id="44 - Grand Est" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("44 - Grand Est").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="44 - Grand EstSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("44 - Grand EstSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="44 - Grand EstEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("44 - Grand EstEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="44 - Grand EstEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("44 - Grand EstEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="44 - Grand EstEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("44 - Grand EstEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 76 - Occitanie</h3>
+<canvas id="76 - Occitanie" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("76 - Occitanie").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="76 - OccitanieSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("76 - OccitanieSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="76 - OccitanieEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("76 - OccitanieEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="76 - OccitanieEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("76 - OccitanieEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="76 - OccitanieEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("76 - OccitanieEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 28 - Normandie</h3>
+<canvas id="28 - Normandie" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("28 - Normandie").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="28 - NormandieSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("28 - NormandieSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="28 - NormandieEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("28 - NormandieEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="28 - NormandieEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("28 - NormandieEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="28 - NormandieEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("28 - NormandieEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 75 - Nouvelle Aquitaine</h3>
+<canvas id="75 - Nouvelle Aquitaine" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("75 - Nouvelle Aquitaine").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="75 - Nouvelle AquitaineSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("75 - Nouvelle AquitaineSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="75 - Nouvelle AquitaineEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("75 - Nouvelle AquitaineEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="75 - Nouvelle AquitaineEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("75 - Nouvelle AquitaineEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="75 - Nouvelle AquitaineEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("75 - Nouvelle AquitaineEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 24 - Centre-Val de Loire</h3>
+<canvas id="24 - Centre-Val de Loire" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("24 - Centre-Val de Loire").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="24 - Centre-Val de LoireSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("24 - Centre-Val de LoireSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="24 - Centre-Val de LoireEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("24 - Centre-Val de LoireEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="24 - Centre-Val de LoireEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("24 - Centre-Val de LoireEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="24 - Centre-Val de LoireEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("24 - Centre-Val de LoireEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 27 - Bourgogne-Franche-Comté</h3>
+<canvas id="27 - Bourgogne-Franche-Comté" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("27 - Bourgogne-Franche-Comté").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="27 - Bourgogne-Franche-ComtéSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("27 - Bourgogne-Franche-ComtéSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="27 - Bourgogne-Franche-ComtéEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("27 - Bourgogne-Franche-ComtéEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="27 - Bourgogne-Franche-ComtéEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("27 - Bourgogne-Franche-ComtéEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="27 - Bourgogne-Franche-ComtéEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("27 - Bourgogne-Franche-ComtéEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 53 - Bretagne</h3>
+<canvas id="53 - Bretagne" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("53 - Bretagne").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="53 - BretagneSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("53 - BretagneSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="53 - BretagneEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("53 - BretagneEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="53 - BretagneEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("53 - BretagneEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="53 - BretagneEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("53 - BretagneEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 94 - Corse</h3>
+<canvas id="94 - Corse" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("94 - Corse").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="94 - CorseSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("94 - CorseSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="94 - CorseEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("94 - CorseEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="94 - CorseEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("94 - CorseEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="94 - CorseEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("94 - CorseEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 52 - Pays de la Loire</h3>
+<canvas id="52 - Pays de la Loire" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("52 - Pays de la Loire").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="52 - Pays de la LoireSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("52 - Pays de la LoireSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="52 - Pays de la LoireEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("52 - Pays de la LoireEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="52 - Pays de la LoireEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("52 - Pays de la LoireEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="52 - Pays de la LoireEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("52 - Pays de la LoireEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 11 - Île-de-France</h3>
+<canvas id="11 - Île-de-France" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("11 - Île-de-France").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="11 - Île-de-FranceSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("11 - Île-de-FranceSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="11 - Île-de-FranceEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("11 - Île-de-FranceEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="11 - Île-de-FranceEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("11 - Île-de-FranceEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="11 - Île-de-FranceEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("11 - Île-de-FranceEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 01 - Guadeloupe</h3>
+<canvas id="01 - Guadeloupe" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("01 - Guadeloupe").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="01 - GuadeloupeSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("01 - GuadeloupeSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="01 - GuadeloupeEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("01 - GuadeloupeEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="01 - GuadeloupeEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("01 - GuadeloupeEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="01 - GuadeloupeEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("01 - GuadeloupeEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 02 - Martinique</h3>
+<canvas id="02 - Martinique" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("02 - Martinique").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="02 - MartiniqueSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("02 - MartiniqueSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="02 - MartiniqueEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("02 - MartiniqueEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="02 - MartiniqueEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("02 - MartiniqueEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="02 - MartiniqueEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("02 - MartiniqueEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 03 - Guyane</h3>
+<canvas id="03 - Guyane" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("03 - Guyane").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="03 - GuyaneSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("03 - GuyaneSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="03 - GuyaneEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("03 - GuyaneEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="03 - GuyaneEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("03 - GuyaneEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="03 - GuyaneEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("03 - GuyaneEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 04 - La Réunion</h3>
+<canvas id="04 - La Réunion" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("04 - La Réunion").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="04 - La RéunionSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("04 - La RéunionSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="04 - La RéunionEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("04 - La RéunionEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="04 - La RéunionEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("04 - La RéunionEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="04 - La RéunionEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("04 - La RéunionEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h3>Région 06 - Mayotte</h3>
+<canvas id="06 - Mayotte" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("06 - Mayotte").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [1532, 83, 77, 14, 2]}],
+        labels: ['1-2-5-8', 'autre', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script>
+
+<table><tr><td>SM</td><td>EPCI</td><td>EPAGE</td><td>EPTB</td></tr>
+<tr>
+<td><canvas id="06 - MayotteSM" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("06 - MayotteSM").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue', 'violetyellow', 'purple'], 'data': [72, 279, 77, 13, 2]}],
+        labels: ['autre', '1-2-5-8', '1-2-8', '5', '8']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="06 - MayotteEPCI" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("06 - MayotteEPCI").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green', 'blue'], 'data': [1244, 9, 1]}],
+        labels: ['1-2-5-8', 'autre', '5']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="06 - MayotteEPAGE" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("06 - MayotteEPAGE").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [3, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+<td><canvas id="06 - MayotteEPTB" height="300vh" width="400vw"></canvas>
+<script>
+var ctx = document.getElementById("06 - MayotteEPTB").getContext('2d');
+
+var cfg = {
+    type: 'doughnut',
+    data: {
+        datasets: [{'backgroundColor': ['red', 'green'], 'data': [6, 1]}],
+        labels: ['1-2-5-8', 'autre']
+    },
+    options: {
+        responsive: false,
+        legend: {
+            position: 'right',
+        },
+        title: {
+            display: true,
+            text: ""
+        },
+        animation: {
+            animateScale: true,
+            animateRotate: true
+        }
+    }
+};
+
+var chart = new Chart(ctx, cfg);
+
+</script></td>
+</tr>
+</table>
+
+<h2>Incohérences du jeu de données</h2>
+<div class="alert alert-warning" role="alert">
+<table>
+<th><tr><td>Nom du Groupement</td><td>Intercommunalité exerçant la GEMAPI</td>
+<td>Competence 1</td><td>Competence 2</td><td>Competence 5</td><td>Competence 8</td></tr></th>
+
+<tr><td>SI des eaux du Recepage</td><td>EPAGE</td>
+<td>0</td><td>0</td><td>0</td><td>0</td></tr>
+
+<tr><td>EPAGE Loire Lignon</td><td>EPAGE</td>
+<td>0</td><td>0</td><td>0</td><td>0</td></tr>
+
+
+<tr><td>Etablissement public territorial du bassin de la Vilaine</td><td>EPTB</td>
+<td>0</td><td>0</td><td>0</td><td>0</td></tr>
+
+<tr><td>Etablissement public territorial du bassin Saône et Doubs</td><td>EPTB</td>
+<td>0</td><td>0</td><td>0</td><td>0</td></tr>
+
+<tr><td>Etablissement public territorial de bassin Seine Grands Lacs</td><td>EPTB</td>
+<td>0</td><td>0</td><td>0</td><td>0</td></tr>
+
+<tr><td>Etablissement public Territorial du bassin de la Vienne</td><td>EPTB</td>
+<td>0</td><td>0</td><td>0</td><td>0</td></tr>
+
+</table>
+</div><hr />
+<p><small>
+Jeux de données utilisés dans cette page:<a href="/opendatapedia/dataset/banatic_competences_groupements_2020">banatic_competences_groupements_2020</a>&nbsp;</small></p>
