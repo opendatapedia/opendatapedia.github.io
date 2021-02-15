@@ -13,8 +13,7 @@
 <!-- chart.js stuff -->
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
-
-
+<script type="text/javascript" language="javascript" src="Chart.Geo.min.js"></script>
 
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -22,7 +21,6 @@
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
-
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -36,30 +34,13 @@ crossorigin=""></script>
 </head>
 <body>
 <div class="container-fluid">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">OpenDataPedia</a>
-    <!--<form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
-    </form>-->
-</nav>
-<div class="row">
-<div class="col-2">
-<ul class="list-group">
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france.html">France</a></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/regions.html">Régions</a></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/departements.html">Départements</a></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/communes.html">Communes</a></li>
-    <li class="list-group-item divider"></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
-</ul>
-</div>
-<div class="col-9"><nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">GEMAPI</li>
     <li class="breadcrumb-item"><a href="gemapi_france.html">France</a></li>
     <li class="breadcrumb-item active" aria-current="page">Régions</li>
     <li class="breadcrumb-item"><a href="gemapi_departements.html">Départements</a></li>
+    <li class="breadcrumb-item"><a href="gemapi_map.html">Cartes</a></li>
   </ol>
 </nav>
 
@@ -67,7 +48,7 @@ crossorigin=""></script>
 <h2>Répartition des intercommunalités par nature juridique dans les Régions</h2>
 <p><em>avec au moins une des quatre competences GEMAPI</em></p>
 <h3>Région Auvergne-Rhône-Alpes</h3>
-<canvas id="Auvergne-Rhône-Alpes_all" height="150vh" width="600vw"></canvas>
+<canvas id="Auvergne-Rhône-Alpes_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Auvergne-Rhône-Alpes_all").getContext('2d');
 
@@ -230,7 +211,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Hauts-de-France</h3>
-<canvas id="Hauts-de-France_all" height="150vh" width="600vw"></canvas>
+<canvas id="Hauts-de-France_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Hauts-de-France_all").getContext('2d');
 
@@ -393,7 +374,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Provence-Alpes-Côte d'Azur</h3>
-<canvas id="Provence-Alpes-Côte d'Azur_all" height="150vh" width="600vw"></canvas>
+<canvas id="Provence-Alpes-Côte d'Azur_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Provence-Alpes-Côte d'Azur_all").getContext('2d');
 
@@ -556,7 +537,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Grand Est</h3>
-<canvas id="Grand Est_all" height="150vh" width="600vw"></canvas>
+<canvas id="Grand Est_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Grand Est_all").getContext('2d');
 
@@ -719,7 +700,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Occitanie</h3>
-<canvas id="Occitanie_all" height="150vh" width="600vw"></canvas>
+<canvas id="Occitanie_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Occitanie_all").getContext('2d');
 
@@ -882,7 +863,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Normandie</h3>
-<canvas id="Normandie_all" height="150vh" width="600vw"></canvas>
+<canvas id="Normandie_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Normandie_all").getContext('2d');
 
@@ -1045,7 +1026,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Nouvelle Aquitaine</h3>
-<canvas id="Nouvelle Aquitaine_all" height="150vh" width="600vw"></canvas>
+<canvas id="Nouvelle Aquitaine_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Nouvelle Aquitaine_all").getContext('2d');
 
@@ -1208,7 +1189,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Centre-Val de Loire</h3>
-<canvas id="Centre-Val de Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Centre-Val de Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Centre-Val de Loire_all").getContext('2d');
 
@@ -1371,7 +1352,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Bourgogne-Franche-Comté</h3>
-<canvas id="Bourgogne-Franche-Comté_all" height="150vh" width="600vw"></canvas>
+<canvas id="Bourgogne-Franche-Comté_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Bourgogne-Franche-Comté_all").getContext('2d');
 
@@ -1534,7 +1515,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Bretagne</h3>
-<canvas id="Bretagne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Bretagne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Bretagne_all").getContext('2d');
 
@@ -1697,7 +1678,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Corse</h3>
-<canvas id="Corse_all" height="150vh" width="600vw"></canvas>
+<canvas id="Corse_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Corse_all").getContext('2d');
 
@@ -1860,7 +1841,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Pays de la Loire</h3>
-<canvas id="Pays de la Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Pays de la Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Pays de la Loire_all").getContext('2d');
 
@@ -2023,7 +2004,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Île-de-France</h3>
-<canvas id="Île-de-France_all" height="150vh" width="600vw"></canvas>
+<canvas id="Île-de-France_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Île-de-France_all").getContext('2d');
 
@@ -2186,7 +2167,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Guadeloupe</h3>
-<canvas id="Guadeloupe_all" height="150vh" width="600vw"></canvas>
+<canvas id="Guadeloupe_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Guadeloupe_all").getContext('2d');
 
@@ -2349,7 +2330,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Martinique</h3>
-<canvas id="Martinique_all" height="150vh" width="600vw"></canvas>
+<canvas id="Martinique_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Martinique_all").getContext('2d');
 
@@ -2512,7 +2493,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Guyane</h3>
-<canvas id="Guyane_all" height="150vh" width="600vw"></canvas>
+<canvas id="Guyane_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Guyane_all").getContext('2d');
 
@@ -2675,7 +2656,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région La Réunion</h3>
-<canvas id="La Réunion_all" height="150vh" width="600vw"></canvas>
+<canvas id="La Réunion_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("La Réunion_all").getContext('2d');
 
@@ -2838,7 +2819,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Région Mayotte</h3>
-<canvas id="Mayotte_all" height="150vh" width="600vw"></canvas>
+<canvas id="Mayotte_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Mayotte_all").getContext('2d');
 
@@ -3005,9 +2986,6 @@ var chart = new Chart(ctx, cfg);
 <table>
 <th><tr><td>Nom du Groupement</td><td>Intercommunalité exerçant la GEMAPI</td>
 <td>Competence 1</td><td>Competence 2</td><td>Competence 5</td><td>Competence 8</td></tr></th>
-
-<tr><td>SI des eaux du Recepage</td><td>EPAGE</td>
-<td>0</td><td>0</td><td>0</td><td>0</td></tr>
 
 <tr><td>EPAGE Loire Lignon</td><td>EPAGE</td>
 <td>0</td><td>0</td><td>0</td><td>0</td></tr>

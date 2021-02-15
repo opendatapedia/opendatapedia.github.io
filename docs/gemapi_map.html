@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>GEMAPI - Cartes de France</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+<script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- chart.js stuff -->
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+<script type="text/javascript" language="javascript" src="Chart.Geo.min.js"></script>
+
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+crossorigin=""/>
+<!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+crossorigin=""></script>
+<script src="/js/leaflet.ajax.min.js"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">GEMAPI</li>
+    <li class="breadcrumb-item"><a href="gemapi_france.html">France</a></li>
+    <li class="breadcrumb-item"><a href="gemapi_regions.html">Régions</a></li>
+    <li class="breadcrumb-item"><a href="gemapi_departements.html">Départements</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Cartes</li>
+  </ol>
+</nav>
+
+<h2>SM</h2>
+<div style="width: 90%"><canvas id="SM"></canvas></div>
+<script>
+fetch('data/maps/france_departements.topojson.json').then((r) => r.json()).then((data) => {
+    const items_values = {'Ain': 7, 'Aisne': 11, 'Alpes-Maritimes': 1, 'Ardèche': 5, 'Ardennes': 1, 'Ariège': 4, 'Aube': 2, 'Aude': 9, 'Aveyron': 2, 'Bouches-du-Rhône': 5, 'Calvados': 1, 'Charente': 11, 'Charente-Maritime': 9, 'Cher': 9, 'Corrèze': 1, "Côte-d'Or": 11, "Côtes-d'Armor": 1, 'Creuse': 5, 'Dordogne': 4, 'Doubs': 2, 'Drôme': 6, 'Eure': 4, 'Eure-et-Loir': 4, 'Finistère': 3, 'Gard': 3, 'Haute-Garonne': 8, 'Gers': 6, 'Gironde': 16, 'Hérault': 1, 'Ille-et-Vilaine': 8, 'Indre': 8, 'Indre-et-Loire': 7, 'Isère': 5, 'Jura': 6, 'Landes': 10, 'Loir-et-Cher': 6, 'Loire': 4, 'Haute-Loire': 1, 'Loire-Atlantique': 5, 'Loiret': 6, 'Lot': 4, 'Lot-et-Garonne': 4, 'Lozère': 2, 'Maine-et-Loire': 4, 'Marne': 5, 'Haute-Marne': 5, 'Mayenne': 6, 'Meurthe-et-Moselle': 3, 'Morbihan': 2, 'Moselle': 8, 'Nièvre': 1, 'Nord': 4, 'Oise': 7, 'Orne': 3, 'Pas-de-Calais': 9, 'Puy-de-Dôme': 2, 'Pyrénées-Atlantiques': 4, 'Hautes-Pyrénées': 1, 'Pyrénées-Orientales': 4, 'Bas-Rhin': 7, 'Haut-Rhin': 10, 'Rhône': 8, 'Haute-Saône': 4, 'Saône-et-Loire': 13, 'Sarthe': 5, 'Savoie': 6, 'Haute-Savoie': 6, 'Seine-Maritime': 13, 'Seine-et-Marne': 12, 'Yvelines': 6, 'Deux-Sèvres': 3, 'Somme': 6, 'Tarn': 3, 'Tarn-et-Garonne': 2, 'Var': 5, 'Vaucluse': 8, 'Vendée': 5, 'Vienne': 5, 'Haute-Vienne': 3, 'Vosges': 1, 'Yonne': 3, 'Essonne': 6, 'Val-de-Marne': 2, "Val-d'Oise": 5}
+    const items = ChartGeo.topojson.feature(data, data.objects['france_departements']).features;
+    const chart = new Chart(document.getElementById("SM").getContext("2d"), {
+        type: 'choropleth',
+        data: {
+            labels: items.map((d) => d.properties.libgeo),
+            datasets: [{
+            label: 'Départements',
+            outline: items,
+            data: items.map((d) => ({feature: d, value: items_values[d.properties.libgeo] || 0}))
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scale: {
+                projection: 'mercator'
+            },
+            geo: {
+                colorScale: {
+                    display: true,
+                    position: 'bottom',
+                    quantize: 10,
+                    legend: {
+                        position: 'bottom-right',
+                    },
+                },
+            },
+        }
+    });
+});
+</script>
+
+<hr />
+<h2>EPCI</h2>
+<div style="width: 90%"><canvas id="EPCI"></canvas></div>
+<script>
+fetch('data/maps/france_departements.topojson.json').then((r) => r.json()).then((data) => {
+    const items_values = {'Ain': 14, 'Aisne': 19, 'Allier': 11, 'Alpes-de-Haute-Provence': 8, 'Hautes-Alpes': 8, 'Alpes-Maritimes': 7, 'Ardèche': 17, 'Ardennes': 8, 'Ariège': 8, 'Aube': 13, 'Aude': 8, 'Aveyron': 19, 'Bouches-du-Rhône': 4, 'Calvados': 16, 'Cantal': 9, 'Charente': 9, 'Charente-Maritime': 13, 'Cher': 16, 'Corrèze': 9, "Côte-d'Or": 19, "Côtes-d'Armor": 8, 'Creuse': 9, 'Dordogne': 20, 'Doubs': 15, 'Drôme': 10, 'Eure': 12, 'Eure-et-Loir': 10, 'Finistère': 21, '': 19, 'Gard': 14, 'Haute-Garonne': 17, 'Gers': 15, 'Gironde': 28, 'Hérault': 16, 'Ille-et-Vilaine': 18, 'Indre': 15, 'Indre-et-Loire': 11, 'Isère': 18, 'Jura': 14, 'Landes': 18, 'Loir-et-Cher': 11, 'Loire': 10, 'Haute-Loire': 11, 'Loire-Atlantique': 16, 'Loiret': 16, 'Lot': 9, 'Lot-et-Garonne': 12, 'Lozère': 10, 'Maine-et-Loire': 9, 'Manche': 8, 'Marne': 13, 'Haute-Marne': 8, 'Mayenne': 9, 'Meurthe-et-Moselle': 19, 'Meuse': 15, 'Morbihan': 12, 'Moselle': 22, 'Nièvre': 11, 'Nord': 17, 'Oise': 21, 'Orne': 15, 'Pas-de-Calais': 19, 'Puy-de-Dôme': 14, 'Pyrénées-Atlantiques': 9, 'Hautes-Pyrénées': 11, 'Pyrénées-Orientales': 12, 'Bas-Rhin': 24, 'Haut-Rhin': 14, 'Rhône': 12, 'Haute-Saône': 18, 'Saône-et-Loire': 19, 'Sarthe': 16, 'Savoie': 17, 'Haute-Savoie': 21, 'Paris': 1, 'Seine-Maritime': 18, 'Seine-et-Marne': 21, 'Yvelines': 10, 'Deux-Sèvres': 8, 'Somme': 14, 'Tarn': 14, 'Tarn-et-Garonne': 10, 'Var': 12, 'Vaucluse': 13, 'Vendée': 19, 'Vienne': 7, 'Haute-Vienne': 13, 'Vosges': 11, 'Yonne': 14, 'Territoire de Belfort': 3, 'Essonne': 10, "Val-d'Oise": 10, 'Guadeloupe': 6, 'Martinique': 3, 'Guyane': 4, 'La Réunion': 5, 'Mayotte': 5}
+    const items = ChartGeo.topojson.feature(data, data.objects['france_departements']).features;
+    const chart = new Chart(document.getElementById("EPCI").getContext("2d"), {
+        type: 'choropleth',
+        data: {
+            labels: items.map((d) => d.properties.libgeo),
+            datasets: [{
+            label: 'Départements',
+            outline: items,
+            data: items.map((d) => ({feature: d, value: items_values[d.properties.libgeo] || 0}))
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scale: {
+                projection: 'mercator'
+            },
+            geo: {
+                colorScale: {
+                    display: true,
+                    position: 'bottom',
+                    quantize: 10,
+                    legend: {
+                        position: 'bottom-right',
+                    },
+                },
+            },
+        }
+    });
+});
+</script>
+
+<hr />
+<h2>EPAGE</h2>
+<div style="width: 90%"><canvas id="EPAGE"></canvas></div>
+<script>
+fetch('data/maps/france_departements.topojson.json').then((r) => r.json()).then((data) => {
+    const items_values = {'Aveyron': 1, "Côte-d'Or": 1, 'Haut-Rhin': 1, 'Vaucluse': 1}
+    const items = ChartGeo.topojson.feature(data, data.objects['france_departements']).features;
+    const chart = new Chart(document.getElementById("EPAGE").getContext("2d"), {
+        type: 'choropleth',
+        data: {
+            labels: items.map((d) => d.properties.libgeo),
+            datasets: [{
+            label: 'Départements',
+            outline: items,
+            data: items.map((d) => ({feature: d, value: items_values[d.properties.libgeo] || 0}))
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scale: {
+                projection: 'mercator'
+            },
+            geo: {
+                colorScale: {
+                    display: true,
+                    position: 'bottom',
+                    quantize: 10,
+                    legend: {
+                        position: 'bottom-right',
+                    },
+                },
+            },
+        }
+    });
+});
+</script>
+
+<hr />
+<h2>EPTB</h2>
+<div style="width: 90%"><canvas id="EPTB"></canvas></div>
+<script>
+fetch('data/maps/france_departements.topojson.json').then((r) => r.json()).then((data) => {
+    const items_values = {'Ardèche': 1, 'Gard': 3, 'Hérault': 1, 'Loire-Atlantique': 1, 'Meurthe-et-Moselle': 1}
+    const items = ChartGeo.topojson.feature(data, data.objects['france_departements']).features;
+    const chart = new Chart(document.getElementById("EPTB").getContext("2d"), {
+        type: 'choropleth',
+        data: {
+            labels: items.map((d) => d.properties.libgeo),
+            datasets: [{
+            label: 'Départements',
+            outline: items,
+            data: items.map((d) => ({feature: d, value: items_values[d.properties.libgeo] || 0}))
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scale: {
+                projection: 'mercator'
+            },
+            geo: {
+                colorScale: {
+                    display: true,
+                    position: 'bottom',
+                    quantize: 10,
+                    legend: {
+                        position: 'bottom-right',
+                    },
+                },
+            },
+        }
+    });
+});
+</script><hr />
+<p><small>
+Jeux de données utilisés dans cette page:<a href="/opendatapedia/dataset/banatic_competences_groupements_2020">banatic_competences_groupements_2020</a>&nbsp;</small></p>

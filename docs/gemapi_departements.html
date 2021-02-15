@@ -13,8 +13,7 @@
 <!-- chart.js stuff -->
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
-
-
+<script type="text/javascript" language="javascript" src="Chart.Geo.min.js"></script>
 
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -22,7 +21,6 @@
 <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
-
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -36,30 +34,13 @@ crossorigin=""></script>
 </head>
 <body>
 <div class="container-fluid">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">OpenDataPedia</a>
-    <!--<form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Rechercher" aria-label="Rechercher">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
-    </form>-->
-</nav>
-<div class="row">
-<div class="col-2">
-<ul class="list-group">
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france.html">France</a></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/regions.html">Régions</a></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/departements.html">Départements</a></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/france/communes.html">Communes</a></li>
-    <li class="list-group-item divider"></li>
-    <li class="list-group-item list-group-item-action"><a class="list-group-item-action" href="/opendatapedia/about.html">About</a></li>
-</ul>
-</div>
-<div class="col-9"><nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item">GEMAPI</li>
     <li class="breadcrumb-item"><a href="gemapi_france.html">France</a></li>
     <li class="breadcrumb-item"><a href="gemapi_regions.html">Régions</a></li>
     <li class="breadcrumb-item active" aria-current="page">Départements</li>
+    <li class="breadcrumb-item"><a href="gemapi_map.html">Cartes</a></li>
   </ol>
 </nav>
 
@@ -67,7 +48,7 @@ crossorigin=""></script>
 <h2>Répartition des intercommunalités par nature juridique dans les Départements</h2>
 <p><em>avec au moins une des quatre competences GEMAPI</em></p>
 <h3>Département Ain</h3>
-<canvas id="Ain_all" height="150vh" width="600vw"></canvas>
+<canvas id="Ain_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Ain_all").getContext('2d');
 
@@ -230,7 +211,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Aisne</h3>
-<canvas id="Aisne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Aisne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Aisne_all").getContext('2d');
 
@@ -393,7 +374,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Allier</h3>
-<canvas id="Allier_all" height="150vh" width="600vw"></canvas>
+<canvas id="Allier_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Allier_all").getContext('2d');
 
@@ -556,7 +537,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Alpes-de-Haute-Provence</h3>
-<canvas id="Alpes-de-Haute-Provence_all" height="150vh" width="600vw"></canvas>
+<canvas id="Alpes-de-Haute-Provence_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Alpes-de-Haute-Provence_all").getContext('2d');
 
@@ -719,7 +700,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Hautes-Alpes</h3>
-<canvas id="Hautes-Alpes_all" height="150vh" width="600vw"></canvas>
+<canvas id="Hautes-Alpes_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Hautes-Alpes_all").getContext('2d');
 
@@ -882,7 +863,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Alpes-Maritimes</h3>
-<canvas id="Alpes-Maritimes_all" height="150vh" width="600vw"></canvas>
+<canvas id="Alpes-Maritimes_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Alpes-Maritimes_all").getContext('2d');
 
@@ -1045,7 +1026,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Ardèche</h3>
-<canvas id="Ardèche_all" height="150vh" width="600vw"></canvas>
+<canvas id="Ardèche_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Ardèche_all").getContext('2d');
 
@@ -1208,7 +1189,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Ardennes</h3>
-<canvas id="Ardennes_all" height="150vh" width="600vw"></canvas>
+<canvas id="Ardennes_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Ardennes_all").getContext('2d');
 
@@ -1371,7 +1352,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Ariège</h3>
-<canvas id="Ariège_all" height="150vh" width="600vw"></canvas>
+<canvas id="Ariège_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Ariège_all").getContext('2d');
 
@@ -1534,7 +1515,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Aube</h3>
-<canvas id="Aube_all" height="150vh" width="600vw"></canvas>
+<canvas id="Aube_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Aube_all").getContext('2d');
 
@@ -1697,7 +1678,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Aude</h3>
-<canvas id="Aude_all" height="150vh" width="600vw"></canvas>
+<canvas id="Aude_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Aude_all").getContext('2d');
 
@@ -1860,7 +1841,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Aveyron</h3>
-<canvas id="Aveyron_all" height="150vh" width="600vw"></canvas>
+<canvas id="Aveyron_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Aveyron_all").getContext('2d');
 
@@ -2023,7 +2004,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Bouches-du-Rhône</h3>
-<canvas id="Bouches-du-Rhône_all" height="150vh" width="600vw"></canvas>
+<canvas id="Bouches-du-Rhône_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Bouches-du-Rhône_all").getContext('2d');
 
@@ -2186,7 +2167,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Calvados</h3>
-<canvas id="Calvados_all" height="150vh" width="600vw"></canvas>
+<canvas id="Calvados_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Calvados_all").getContext('2d');
 
@@ -2349,7 +2330,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Cantal</h3>
-<canvas id="Cantal_all" height="150vh" width="600vw"></canvas>
+<canvas id="Cantal_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Cantal_all").getContext('2d');
 
@@ -2512,7 +2493,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Charente</h3>
-<canvas id="Charente_all" height="150vh" width="600vw"></canvas>
+<canvas id="Charente_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Charente_all").getContext('2d');
 
@@ -2675,7 +2656,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Charente-Maritime</h3>
-<canvas id="Charente-Maritime_all" height="150vh" width="600vw"></canvas>
+<canvas id="Charente-Maritime_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Charente-Maritime_all").getContext('2d');
 
@@ -2838,7 +2819,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Cher</h3>
-<canvas id="Cher_all" height="150vh" width="600vw"></canvas>
+<canvas id="Cher_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Cher_all").getContext('2d');
 
@@ -3001,7 +2982,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Corrèze</h3>
-<canvas id="Corrèze_all" height="150vh" width="600vw"></canvas>
+<canvas id="Corrèze_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Corrèze_all").getContext('2d');
 
@@ -3164,7 +3145,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Côte-d'Or</h3>
-<canvas id="Côte-d'Or_all" height="150vh" width="600vw"></canvas>
+<canvas id="Côte-d'Or_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Côte-d'Or_all").getContext('2d');
 
@@ -3327,7 +3308,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Côtes-d'Armor</h3>
-<canvas id="Côtes-d'Armor_all" height="150vh" width="600vw"></canvas>
+<canvas id="Côtes-d'Armor_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Côtes-d'Armor_all").getContext('2d');
 
@@ -3490,7 +3471,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Creuse</h3>
-<canvas id="Creuse_all" height="150vh" width="600vw"></canvas>
+<canvas id="Creuse_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Creuse_all").getContext('2d');
 
@@ -3653,7 +3634,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Dordogne</h3>
-<canvas id="Dordogne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Dordogne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Dordogne_all").getContext('2d');
 
@@ -3816,7 +3797,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Doubs</h3>
-<canvas id="Doubs_all" height="150vh" width="600vw"></canvas>
+<canvas id="Doubs_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Doubs_all").getContext('2d');
 
@@ -3979,7 +3960,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Drôme</h3>
-<canvas id="Drôme_all" height="150vh" width="600vw"></canvas>
+<canvas id="Drôme_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Drôme_all").getContext('2d');
 
@@ -4142,7 +4123,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Eure</h3>
-<canvas id="Eure_all" height="150vh" width="600vw"></canvas>
+<canvas id="Eure_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Eure_all").getContext('2d');
 
@@ -4305,7 +4286,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Eure-et-Loir</h3>
-<canvas id="Eure-et-Loir_all" height="150vh" width="600vw"></canvas>
+<canvas id="Eure-et-Loir_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Eure-et-Loir_all").getContext('2d');
 
@@ -4468,7 +4449,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Finistère</h3>
-<canvas id="Finistère_all" height="150vh" width="600vw"></canvas>
+<canvas id="Finistère_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Finistère_all").getContext('2d');
 
@@ -4631,7 +4612,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Corse-du-Sud</h3>
-<canvas id="Corse-du-Sud_all" height="150vh" width="600vw"></canvas>
+<canvas id="Corse-du-Sud_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Corse-du-Sud_all").getContext('2d');
 
@@ -4794,7 +4775,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Corse</h3>
-<canvas id="Haute-Corse_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Corse_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Corse_all").getContext('2d');
 
@@ -4957,7 +4938,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Gard</h3>
-<canvas id="Gard_all" height="150vh" width="600vw"></canvas>
+<canvas id="Gard_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Gard_all").getContext('2d');
 
@@ -5120,7 +5101,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Garonne</h3>
-<canvas id="Haute-Garonne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Garonne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Garonne_all").getContext('2d');
 
@@ -5283,7 +5264,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Gers</h3>
-<canvas id="Gers_all" height="150vh" width="600vw"></canvas>
+<canvas id="Gers_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Gers_all").getContext('2d');
 
@@ -5446,7 +5427,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Gironde</h3>
-<canvas id="Gironde_all" height="150vh" width="600vw"></canvas>
+<canvas id="Gironde_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Gironde_all").getContext('2d');
 
@@ -5609,7 +5590,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Hérault</h3>
-<canvas id="Hérault_all" height="150vh" width="600vw"></canvas>
+<canvas id="Hérault_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Hérault_all").getContext('2d');
 
@@ -5772,7 +5753,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Ille-et-Vilaine</h3>
-<canvas id="Ille-et-Vilaine_all" height="150vh" width="600vw"></canvas>
+<canvas id="Ille-et-Vilaine_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Ille-et-Vilaine_all").getContext('2d');
 
@@ -5935,7 +5916,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Indre</h3>
-<canvas id="Indre_all" height="150vh" width="600vw"></canvas>
+<canvas id="Indre_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Indre_all").getContext('2d');
 
@@ -6098,7 +6079,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Indre-et-Loire</h3>
-<canvas id="Indre-et-Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Indre-et-Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Indre-et-Loire_all").getContext('2d');
 
@@ -6261,7 +6242,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Isère</h3>
-<canvas id="Isère_all" height="150vh" width="600vw"></canvas>
+<canvas id="Isère_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Isère_all").getContext('2d');
 
@@ -6424,7 +6405,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Jura</h3>
-<canvas id="Jura_all" height="150vh" width="600vw"></canvas>
+<canvas id="Jura_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Jura_all").getContext('2d');
 
@@ -6587,7 +6568,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Landes</h3>
-<canvas id="Landes_all" height="150vh" width="600vw"></canvas>
+<canvas id="Landes_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Landes_all").getContext('2d');
 
@@ -6750,7 +6731,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Loir-et-Cher</h3>
-<canvas id="Loir-et-Cher_all" height="150vh" width="600vw"></canvas>
+<canvas id="Loir-et-Cher_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Loir-et-Cher_all").getContext('2d');
 
@@ -6913,7 +6894,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Loire</h3>
-<canvas id="Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Loire_all").getContext('2d');
 
@@ -7076,7 +7057,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Loire</h3>
-<canvas id="Haute-Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Loire_all").getContext('2d');
 
@@ -7239,7 +7220,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Loire-Atlantique</h3>
-<canvas id="Loire-Atlantique_all" height="150vh" width="600vw"></canvas>
+<canvas id="Loire-Atlantique_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Loire-Atlantique_all").getContext('2d');
 
@@ -7402,7 +7383,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Loiret</h3>
-<canvas id="Loiret_all" height="150vh" width="600vw"></canvas>
+<canvas id="Loiret_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Loiret_all").getContext('2d');
 
@@ -7565,7 +7546,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Lot</h3>
-<canvas id="Lot_all" height="150vh" width="600vw"></canvas>
+<canvas id="Lot_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Lot_all").getContext('2d');
 
@@ -7728,7 +7709,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Lot-et-Garonne</h3>
-<canvas id="Lot-et-Garonne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Lot-et-Garonne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Lot-et-Garonne_all").getContext('2d');
 
@@ -7891,7 +7872,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Lozère</h3>
-<canvas id="Lozère_all" height="150vh" width="600vw"></canvas>
+<canvas id="Lozère_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Lozère_all").getContext('2d');
 
@@ -8054,7 +8035,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Maine-et-Loire</h3>
-<canvas id="Maine-et-Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Maine-et-Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Maine-et-Loire_all").getContext('2d');
 
@@ -8217,7 +8198,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Manche</h3>
-<canvas id="Manche_all" height="150vh" width="600vw"></canvas>
+<canvas id="Manche_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Manche_all").getContext('2d');
 
@@ -8380,7 +8361,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Marne</h3>
-<canvas id="Marne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Marne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Marne_all").getContext('2d');
 
@@ -8543,7 +8524,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Marne</h3>
-<canvas id="Haute-Marne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Marne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Marne_all").getContext('2d');
 
@@ -8706,7 +8687,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Mayenne</h3>
-<canvas id="Mayenne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Mayenne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Mayenne_all").getContext('2d');
 
@@ -8869,7 +8850,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Meurthe-et-Moselle</h3>
-<canvas id="Meurthe-et-Moselle_all" height="150vh" width="600vw"></canvas>
+<canvas id="Meurthe-et-Moselle_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Meurthe-et-Moselle_all").getContext('2d');
 
@@ -9032,7 +9013,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Meuse</h3>
-<canvas id="Meuse_all" height="150vh" width="600vw"></canvas>
+<canvas id="Meuse_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Meuse_all").getContext('2d');
 
@@ -9195,7 +9176,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Morbihan</h3>
-<canvas id="Morbihan_all" height="150vh" width="600vw"></canvas>
+<canvas id="Morbihan_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Morbihan_all").getContext('2d');
 
@@ -9358,7 +9339,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Moselle</h3>
-<canvas id="Moselle_all" height="150vh" width="600vw"></canvas>
+<canvas id="Moselle_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Moselle_all").getContext('2d');
 
@@ -9521,7 +9502,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Nièvre</h3>
-<canvas id="Nièvre_all" height="150vh" width="600vw"></canvas>
+<canvas id="Nièvre_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Nièvre_all").getContext('2d');
 
@@ -9684,7 +9665,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Nord</h3>
-<canvas id="Nord_all" height="150vh" width="600vw"></canvas>
+<canvas id="Nord_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Nord_all").getContext('2d');
 
@@ -9847,7 +9828,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Oise</h3>
-<canvas id="Oise_all" height="150vh" width="600vw"></canvas>
+<canvas id="Oise_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Oise_all").getContext('2d');
 
@@ -10010,7 +9991,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Orne</h3>
-<canvas id="Orne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Orne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Orne_all").getContext('2d');
 
@@ -10173,7 +10154,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Pas-de-Calais</h3>
-<canvas id="Pas-de-Calais_all" height="150vh" width="600vw"></canvas>
+<canvas id="Pas-de-Calais_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Pas-de-Calais_all").getContext('2d');
 
@@ -10336,7 +10317,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Puy-de-Dôme</h3>
-<canvas id="Puy-de-Dôme_all" height="150vh" width="600vw"></canvas>
+<canvas id="Puy-de-Dôme_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Puy-de-Dôme_all").getContext('2d');
 
@@ -10499,7 +10480,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Pyrénées-Atlantiques</h3>
-<canvas id="Pyrénées-Atlantiques_all" height="150vh" width="600vw"></canvas>
+<canvas id="Pyrénées-Atlantiques_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Pyrénées-Atlantiques_all").getContext('2d');
 
@@ -10662,7 +10643,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Hautes-Pyrénées</h3>
-<canvas id="Hautes-Pyrénées_all" height="150vh" width="600vw"></canvas>
+<canvas id="Hautes-Pyrénées_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Hautes-Pyrénées_all").getContext('2d');
 
@@ -10825,7 +10806,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Pyrénées-Orientales</h3>
-<canvas id="Pyrénées-Orientales_all" height="150vh" width="600vw"></canvas>
+<canvas id="Pyrénées-Orientales_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Pyrénées-Orientales_all").getContext('2d');
 
@@ -10988,7 +10969,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Bas-Rhin</h3>
-<canvas id="Bas-Rhin_all" height="150vh" width="600vw"></canvas>
+<canvas id="Bas-Rhin_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Bas-Rhin_all").getContext('2d');
 
@@ -11151,7 +11132,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haut-Rhin</h3>
-<canvas id="Haut-Rhin_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haut-Rhin_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haut-Rhin_all").getContext('2d');
 
@@ -11314,7 +11295,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Rhône</h3>
-<canvas id="Rhône_all" height="150vh" width="600vw"></canvas>
+<canvas id="Rhône_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Rhône_all").getContext('2d');
 
@@ -11477,7 +11458,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Saône</h3>
-<canvas id="Haute-Saône_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Saône_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Saône_all").getContext('2d');
 
@@ -11640,7 +11621,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Saône-et-Loire</h3>
-<canvas id="Saône-et-Loire_all" height="150vh" width="600vw"></canvas>
+<canvas id="Saône-et-Loire_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Saône-et-Loire_all").getContext('2d');
 
@@ -11803,7 +11784,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Sarthe</h3>
-<canvas id="Sarthe_all" height="150vh" width="600vw"></canvas>
+<canvas id="Sarthe_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Sarthe_all").getContext('2d');
 
@@ -11966,7 +11947,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Savoie</h3>
-<canvas id="Savoie_all" height="150vh" width="600vw"></canvas>
+<canvas id="Savoie_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Savoie_all").getContext('2d');
 
@@ -12129,7 +12110,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Savoie</h3>
-<canvas id="Haute-Savoie_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Savoie_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Savoie_all").getContext('2d');
 
@@ -12292,7 +12273,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Paris</h3>
-<canvas id="Paris_all" height="150vh" width="600vw"></canvas>
+<canvas id="Paris_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Paris_all").getContext('2d');
 
@@ -12455,7 +12436,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Seine-Maritime</h3>
-<canvas id="Seine-Maritime_all" height="150vh" width="600vw"></canvas>
+<canvas id="Seine-Maritime_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Seine-Maritime_all").getContext('2d');
 
@@ -12618,7 +12599,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Seine-et-Marne</h3>
-<canvas id="Seine-et-Marne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Seine-et-Marne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Seine-et-Marne_all").getContext('2d');
 
@@ -12781,7 +12762,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Yvelines</h3>
-<canvas id="Yvelines_all" height="150vh" width="600vw"></canvas>
+<canvas id="Yvelines_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Yvelines_all").getContext('2d');
 
@@ -12944,7 +12925,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Deux-Sèvres</h3>
-<canvas id="Deux-Sèvres_all" height="150vh" width="600vw"></canvas>
+<canvas id="Deux-Sèvres_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Deux-Sèvres_all").getContext('2d');
 
@@ -13107,7 +13088,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Somme</h3>
-<canvas id="Somme_all" height="150vh" width="600vw"></canvas>
+<canvas id="Somme_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Somme_all").getContext('2d');
 
@@ -13270,7 +13251,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Tarn</h3>
-<canvas id="Tarn_all" height="150vh" width="600vw"></canvas>
+<canvas id="Tarn_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Tarn_all").getContext('2d');
 
@@ -13433,7 +13414,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Tarn-et-Garonne</h3>
-<canvas id="Tarn-et-Garonne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Tarn-et-Garonne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Tarn-et-Garonne_all").getContext('2d');
 
@@ -13596,7 +13577,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Var</h3>
-<canvas id="Var_all" height="150vh" width="600vw"></canvas>
+<canvas id="Var_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Var_all").getContext('2d');
 
@@ -13759,7 +13740,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Vaucluse</h3>
-<canvas id="Vaucluse_all" height="150vh" width="600vw"></canvas>
+<canvas id="Vaucluse_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Vaucluse_all").getContext('2d');
 
@@ -13922,7 +13903,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Vendée</h3>
-<canvas id="Vendée_all" height="150vh" width="600vw"></canvas>
+<canvas id="Vendée_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Vendée_all").getContext('2d');
 
@@ -14085,7 +14066,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Vienne</h3>
-<canvas id="Vienne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Vienne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Vienne_all").getContext('2d');
 
@@ -14248,7 +14229,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Haute-Vienne</h3>
-<canvas id="Haute-Vienne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Haute-Vienne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Haute-Vienne_all").getContext('2d');
 
@@ -14411,7 +14392,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Vosges</h3>
-<canvas id="Vosges_all" height="150vh" width="600vw"></canvas>
+<canvas id="Vosges_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Vosges_all").getContext('2d');
 
@@ -14574,7 +14555,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Yonne</h3>
-<canvas id="Yonne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Yonne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Yonne_all").getContext('2d');
 
@@ -14737,7 +14718,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Territoire de Belfort</h3>
-<canvas id="Territoire de Belfort_all" height="150vh" width="600vw"></canvas>
+<canvas id="Territoire de Belfort_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Territoire de Belfort_all").getContext('2d');
 
@@ -14900,7 +14881,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Essonne</h3>
-<canvas id="Essonne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Essonne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Essonne_all").getContext('2d');
 
@@ -15063,7 +15044,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Hauts-de-Seine</h3>
-<canvas id="Hauts-de-Seine_all" height="150vh" width="600vw"></canvas>
+<canvas id="Hauts-de-Seine_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Hauts-de-Seine_all").getContext('2d');
 
@@ -15226,7 +15207,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Seine-Saint-Denis</h3>
-<canvas id="Seine-Saint-Denis_all" height="150vh" width="600vw"></canvas>
+<canvas id="Seine-Saint-Denis_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Seine-Saint-Denis_all").getContext('2d');
 
@@ -15389,7 +15370,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Val-de-Marne</h3>
-<canvas id="Val-de-Marne_all" height="150vh" width="600vw"></canvas>
+<canvas id="Val-de-Marne_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Val-de-Marne_all").getContext('2d');
 
@@ -15552,7 +15533,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Val-d'Oise</h3>
-<canvas id="Val-d'Oise_all" height="150vh" width="600vw"></canvas>
+<canvas id="Val-d'Oise_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Val-d'Oise_all").getContext('2d');
 
@@ -15715,7 +15696,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Guadeloupe</h3>
-<canvas id="Guadeloupe_all" height="150vh" width="600vw"></canvas>
+<canvas id="Guadeloupe_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Guadeloupe_all").getContext('2d');
 
@@ -15878,7 +15859,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Martinique</h3>
-<canvas id="Martinique_all" height="150vh" width="600vw"></canvas>
+<canvas id="Martinique_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Martinique_all").getContext('2d');
 
@@ -16041,7 +16022,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Guyane</h3>
-<canvas id="Guyane_all" height="150vh" width="600vw"></canvas>
+<canvas id="Guyane_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Guyane_all").getContext('2d');
 
@@ -16204,7 +16185,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département La Réunion</h3>
-<canvas id="La Réunion_all" height="150vh" width="600vw"></canvas>
+<canvas id="La Réunion_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("La Réunion_all").getContext('2d');
 
@@ -16367,7 +16348,7 @@ var chart = new Chart(ctx, cfg);
 </table>
 
 <h3>Département Mayotte</h3>
-<canvas id="Mayotte_all" height="150vh" width="600vw"></canvas>
+<canvas id="Mayotte_all" height="100vh" width="600vw"></canvas>
 <script>
 var ctx = document.getElementById("Mayotte_all").getContext('2d');
 
@@ -16534,9 +16515,6 @@ var chart = new Chart(ctx, cfg);
 <table>
 <th><tr><td>Nom du Groupement</td><td>Intercommunalité exerçant la GEMAPI</td>
 <td>Competence 1</td><td>Competence 2</td><td>Competence 5</td><td>Competence 8</td></tr></th>
-
-<tr><td>SI des eaux du Recepage</td><td>EPAGE</td>
-<td>0</td><td>0</td><td>0</td><td>0</td></tr>
 
 <tr><td>EPAGE Loire Lignon</td><td>EPAGE</td>
 <td>0</td><td>0</td><td>0</td><td>0</td></tr>
